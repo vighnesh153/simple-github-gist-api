@@ -34,5 +34,8 @@
     "jest": "^26.1.0",
     "ts-jest": "^26.1.2",
     "typescript": "^3.9.6"
+  },
+  "dependencies": {
+    "axios": "^0.19.2"
   }
 }
