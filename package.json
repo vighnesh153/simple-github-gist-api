@@ -5,9 +5,34 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config jestconfig.json",
+    "build": "rm -rf dist/ && tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "files": [
+    "dist/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:rv-npm/simple-github-gist-api.git"
+  },
+  "keywords": [
+    "gist",
+    "storage",
+    "gist db",
+    "database",
+    "github",
+    "free"
+  ],
+  "author": "Vighnesh Raut",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/rv-npm/simple-github-gist-api/issues"
+  },
+  "homepage": "https://github.com/rv-npm/simple-github-gist-api#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.4",
+    "jest": "^26.1.0",
+    "ts-jest": "^26.1.2",
+    "typescript": "^3.9.6"
+  }
 }
