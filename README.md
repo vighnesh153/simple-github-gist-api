@@ -10,7 +10,9 @@ need to make those tedious HTTP requests.
 
 ## Installation
 
+```
 npm i -S simple-github-gist-api
+```
 
 ## Usage
 
