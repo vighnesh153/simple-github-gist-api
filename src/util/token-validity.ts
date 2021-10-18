@@ -1,5 +1,5 @@
-import constants  from './constants';
-import { default as axios } from 'axios';
+import axios from 'axios';
+import constants  from '../constants';
 
 const isTokenStringValid = async (token: string): Promise<boolean> => {
     const rateLimitEndpoint = constants.githubRateLimit;
