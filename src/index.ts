@@ -100,7 +100,7 @@ export class GithubGistApi {
     private async _fetchGistIfExists(): Promise<void> {
         let result;
         try {
-            result = await axios.get(constants.githubGists, this._authConfig());
+            result = await axios.get<Gist[]>(constants.githubGists, this._authConfig());
         } catch (e) {
             throw new Error('Error while fetching gists.')
         }
@@ -131,7 +131,7 @@ export class GithubGistApi {
 
         let result;
         try {
-            result = await axios.post(
+            result = await axios.post<Gist>(
                 constants.githubGists, data, this._authConfig()
             );
         } catch (e) {
@@ -145,7 +145,7 @@ export class GithubGistApi {
         const dummyParam = `dummyParam=${ Math.random() }`;
         const url = `${constants.githubGists}/${this._gistId}?${dummyParam}`;
         try {
-            const result = await axios.get(url, this._authConfig());
+            const result = await axios.get<{ history: { version: string }[] }>(url, this._authConfig());
             const response: { history: { version: string }[] } = result.data;
             const latestCommit = response.history[0];
             return latestCommit.version;

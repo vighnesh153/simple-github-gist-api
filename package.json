@@ -31,12 +31,12 @@
   },
   "homepage": "https://github.com/rv-npm/simple-github-gist-api#readme",
   "devDependencies": {
-    "@types/jest": "^26.0.4",
-    "jest": "^26.1.0",
-    "ts-jest": "^26.1.2",
-    "typescript": "^3.9.6"
+    "@types/jest": "^27.0.2",
+    "jest": "^27.3.0",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.4.4"
   },
   "dependencies": {
-    "axios": "^0.19.2"
+    "axios": "^0.23.0"
   }
 }
