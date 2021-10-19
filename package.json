@@ -1,6 +1,6 @@
 {
   "name": "simple-github-gist-api",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A way to store data on Github Gist.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:rv-npm/simple-github-gist-api.git"
+    "url": "git+ssh://git@github.com:vighnesh153/simple-github-gist-api.git"
   },
   "keywords": [
     "gist",
@@ -27,9 +27,9 @@
   "author": "Vighnesh Raut",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/rv-npm/simple-github-gist-api/issues"
+    "url": "https://github.com/vighnesh153/simple-github-gist-api/issues"
   },
-  "homepage": "https://github.com/rv-npm/simple-github-gist-api#readme",
+  "homepage": "https://github.com/vighnesh153/simple-github-gist-api#readme",
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "jest": "^27.3.0",

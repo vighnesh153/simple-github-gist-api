@@ -2,7 +2,9 @@
 
 <p>
 <img alt="npm" src="https://img.shields.io/npm/dt/simple-github-gist-api">
-<img alt="npm" src="https://img.shields.io/npm/v/simple-github-gist-api">
+<a href="https://www.npmjs.com/package/simple-github-gist-api">
+  <img alt="npm" src="https://img.shields.io/npm/v/simple-github-gist-api">
+</a>
 </p>
 
 > This documentation is for v2 of the lib. v2 has a few breaking changes.
