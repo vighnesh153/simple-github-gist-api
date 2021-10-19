@@ -4,9 +4,51 @@
 <img alt="npm" src="https://img.shields.io/npm/dt/simple-github-gist-api">
 </p>
 
-Use this promise, async-await based API to 
+> This documentation is for v2 of the lib. v2 has a few breaking changes.
+> 
+> You can find the v1 documentation in the `docs` directory (On Github).
+
+Use this promise based API to 
 store data on your github gists without the 
 need to make those tedious HTTP requests.
+
+> Note: Github Gist's API work on commit-id basis. If you save anything, 
+> it is a new commit and the commit-id changes. So, when you save, 
+> don't do that simultaneously. 
+> 
+> For instance, assume you are using this in your API. 
+> And you have an endpoint `/create-file`.
+> 
+> Think multiple people making request at the same time:
+>   /create-file?name=1.json
+>   /create-file?name=2.json
+>   /create-file?name=3.json
+>   ...
+> 
+> If this happens at the same time, then we cannot guarantee that the 
+> all the files will be saved. Maybe when creating both 2.json and 3.json,
+> we are making use of the same commit-id. Both will work but 1 will over-write 
+> the other commit.
+> 
+> But if you do:
+> 
+> const file1 = gist.createFile('1.json', "{}")
+> const file2 = gist.createFile('2.json', "{}")
+> const file3 = gist.createFile('3.json', "{}")
+> 
+> await file1.save();
+> await file2.save();
+> await file3.save();
+> 
+> this will work as the latest commit-id will be fetched when 
+> saving the next file.  
+> 
+> // Or
+> 
+> gist.save();
+>
+> this will work as well because all the changes will go in a single commit.
+> 
 
 ## Installation
 
@@ -18,45 +60,50 @@ npm i -S simple-github-gist-api
 
 ### Import (In Typescript)
 ```ts
-import { GithubGistApi } from 'simple-github-gist-api'
+import GithubGist from 'simple-github-gist-api'
 ```
 
 ### Require (In Javascript)
 ```js
-const { GithubGistApi } = require("simple-github-gist-api");
+const GithubGist = require("simple-github-gist-api");
 ```
 
 ### Instantiate
+* [Generate](https://github.com/settings/tokens/new?scopes=gist) a Github PAT with `gist`
+  scope selected. Keep this a secret as an environment variable. This will be used
+  to create and update the gists.
+
 ```js
-const gist = new GithubGistApi('PAT', 'APP-IDENTIFIER');
+const githubGist = new GithubGist({
+  // Required
+  personalAccessToken: 'YOUR-github-personal-access-token',
+
+  // Required: App-Identifier -> You can make use of your Application 
+  // name but make sure it is hyphen/underscore separated.
+  appIdentifier: 'MyTestApp',
+  
+  // Optional: Doing this will allow the gist to be read by anyone. Just like a public 
+  // repository on Github. Setting it false, will allow both read and write
+  // only with Github PAT.
+  isPublic: false,
+  
+  // Optional: If using on the server side, you can set it to false. But if you are, for 
+  // some reason, using this package on front-end app, set it to `true`. This
+  // will, behind the scenes, use `https://cors-anywhere.herokuapp.com/` prefix
+  // to avoid CORS error. Note: Heroku may sometimes be slow. If you have your own
+  // proxy server, you can use that as your custom prefix instead, too.
+  cors: {
+    addPrefix: true,
+    customPrefix: (someURl) => `YourCustomPrefix` + someURl,
+  },
+});
 ```
-* [Generate](https://github.com/settings/tokens/new) a Github PAT with `gist` 
-scope selected. Keep this a secret as an environment variable. This will be used 
-to create and update the gists. 
-* App-Identifier. You can make use of your Application name but make sure  
-it is hyphen/underscore separated. 
+
 > Do use same identifier when re-starting the application. This is the thing 
 > that will be used to identify your previously stored Github Gist. For 
 > different applications, use different identifiers, unless you want to share 
 > the Github gist among applications.
 
-### Read protection
-```js
-gist.isPublic = true;
-```
-Doing this will allow the gist to be read by anyone. Just like a public 
-repository on Github. Setting it false, will allow both read and write 
-only with Github PAT.
-
-### CORS
-```js
-gist.allowCors = true;
-```
-If using on the server side, you can set it to false. But if you are, for 
-some reason, using this package on front-end app, set it to `true`. This 
-will, behind the scenes, use `https://cors-anywhere.herokuapp.com/` prefix 
-to avoid CORS error. Heroku may sometimes be slow. Currently, working on a better 
-way to make the request from front-end without getting CORS error.
 
 ### Gist initialization
 The following just syncs up with the Github Gist server to fetch all the latest 
@@ -64,7 +111,10 @@ data. If running for the first time, it will create the gist for you with the
 above configurations.
 ```js
 try {
-    await gist.touch();
+    await githubGist.touch();
+
+    console.log("Gist ID", githubGist.id);
+    console.log("Github Owner Username", githubGist.ownerUsername);
 } catch (e) {
     // gist initialization failed.
     // console.log(e)
@@ -73,24 +123,32 @@ try {
 
 ### Get all file names
 ```ts
-const fileNames: string[] = gist.getFileNames();
+const fileNames: string[] = githubGist.getFileNames();
 ```
 
 ### Create a file
 The content of any file will always be string. If you want to have a json file, 
-store its content as string marshalling(JSON.stringify) it to string.
+store it's content by deserializing it via `JSON.stringify` or any method you prefer.
 ```ts
 gist.createFile('projects.json', '{ "a": 123 }')
 ```
 
+> Creates a file in the gist. If file already exists, it over-writes the
+> content of the file.
+>   Returns true, if the file was newly created.
+>   Returns false, if the file already exists and over-writes its content
+
+
 ### Get a file
+Returns the file instance.
 ```ts
 const projectsFile = gist.getFile('projects.json');
 ```
 
 ### Get content of the file
+Returns the file content.
 ```ts
-const content = projectsFile.getContent();
+const content: string = projectsFile.getContent();
 ```
 
 ### Overwrite the file with new content
@@ -103,7 +161,8 @@ projectsFile.overwrite('{ "a": 456 }');
 await projectsFile.save();
 ```
 
-### If multiple files have updates, you can bulk save all the files by
+### If multiple files have updates, you can bulk save all the files
 ```ts
 await gist.save();
 ```
+> Only files that have un-saved changes will be saved.

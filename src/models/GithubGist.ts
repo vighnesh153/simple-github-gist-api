@@ -146,6 +146,13 @@ class GithubGist {
   }
 
   /**
+   * Get all file instances
+   */
+  getFiles = (): GistFile[] => {
+    return [...this.gistFiles];
+  };
+
+  /**
    * Returns the names of all the files in the gist.
    */
   getFileNames = (): string[] => {
