@@ -112,31 +112,37 @@ class GithubGist {
   };
 
   /**
-   * Creates a file in the gist
+   * Creates a file in the gist. If file already exists, it over-writes the
+   * content of the file.
+   *   Returns, true, if file was created.
+   *   Returns, false, if existing file was updated.
    *
    * @param name
    * @param content
    */
-  createFile = (name: string, content: string): void => {
+  createFile = (name: string, content: string): boolean => {
     const existingFile = this.gistFiles.find((file) => file.name === name);
     if (existingFile) {
-      throw new Error(`A file named ${name} already exists.`);
+      existingFile.overwrite(content);
+      return false;
     }
 
     const file = this.constructGistFile(name, content);
     this.gistFiles.push(file);
+    return true;
   }
 
   /**
-   * Get a particular file instance
+   * Get a particular file instance. Returns null if file not found.
    *
    * @param name
    */
-  getFile = (name: string): GistFile => {
+  getFile = (name: string): GistFile | null => {
     const file = this.gistFiles.find((file) => file.name === name);
     if (file) return file;
 
-    throw new Error('No file found with name: ' + name);
+    // File not found
+    return null;
   }
 
   /**
@@ -164,29 +170,20 @@ class GithubGist {
     const url = `${constants.githubGists}/${this.gistId}`;
     const body = {public: this.isPublic, files};
 
-    try {
-      await axios.post(url, body, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
+    await axios.post(url, body, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
 
-      // Mark the hasUpdates flag in all the files as false.
-      this.gistFiles.forEach((file) => {
-        file.hasUpdates = false;
-      });
-    } catch (e) {
-      throw new Error(`Failed to save the files.`);
-    }
+    // Mark the hasUpdates flag in all the files as false.
+    this.gistFiles.forEach((file) => {
+      file.hasUpdates = false;
+    });
   }
 
   /**
    * [Private Member] Fetches the gist information.
    */
   private fetchGist = async (): Promise<void> => {
-    let result;
-    try {
-      // Gets all the gists basic information
-      result = await axios.get<IGist[]>(constants.githubGists, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
-    } catch (e) {
-      throw new Error('Error while fetching gists.')
-    }
+    // Gets all the gists basic information
+    const result = await axios.get<IGist[]>(constants.githubGists, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
 
     const gists = result.data;
     for (const gist of gists) {
@@ -216,14 +213,12 @@ class GithubGist {
       }
     };
 
-    let result;
-    try {
-      result = await axios.post<IGist>(githubGists, payload, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
-    } catch (e) {
-      throw new Error('Error while creating the gist.')
-    }
+    // Create gist API call
+    const result = await axios.post<IGist>(githubGists, payload, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
 
     const gist = result.data;
+
+    // Initialize the current instance with the gist meta-information
     await this.initialize(gist);
   };
 

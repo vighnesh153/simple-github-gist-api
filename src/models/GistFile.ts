@@ -52,6 +52,7 @@ class GistFile {
     this.fileContent = options.fileContent;
 
     this.isPublic = options.isPublic;
+    this.fileHasUpdates = true;
 
     this.addCorsPrefix = Boolean(options.cors?.addPrefix);
     this.customCorsPrefix = options.cors?.customPrefix;
@@ -83,12 +84,8 @@ class GistFile {
       }
     };
 
-    try {
-      await axios.post(url, body, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
-      this.fileHasUpdates = false;
-    } catch (e) {
-      throw new Error("Couldn't save file: " + this.fileName);
-    }
+    await axios.post(url, body, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
+    this.fileHasUpdates = false;
   }
 
   /**
@@ -97,11 +94,7 @@ class GistFile {
   fetchLatest = async (): Promise<void> => {
     const latestCommit = await this.getLatestGistCommit();
     const url = this.getLatestGistFileFetchUrl(latestCommit);
-    try {
-      this.fileContent = await axios.get(url, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
-    } catch (e) {
-      throw new Error("Couldn't fetch latest data of " + this.fileName);
-    }
+    this.fileContent = await axios.get(url, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
     this.fileHasUpdates = false;
   }
 
