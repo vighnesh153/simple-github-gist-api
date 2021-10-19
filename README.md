@@ -21,35 +21,39 @@ need to make those tedious HTTP requests.
 > And you have an endpoint `/create-file`.
 > 
 > Think multiple people making request at the same time:
->   /create-file?name=1.json
->   /create-file?name=2.json
->   /create-file?name=3.json
->   ...
-> 
+```
+/create-file?name=1.json
+/create-file?name=2.json
+/create-file?name=3.json
+...
+```
+
 > If this happens at the same time, then we cannot guarantee that the 
 > all the files will be saved. Maybe when creating both 2.json and 3.json,
 > we are making use of the same commit-id. Both will work but 1 will over-write 
 > the other commit.
 > 
 > But if you do:
-> 
-> const file1 = gist.createFile('1.json', "{}")
-> const file2 = gist.createFile('2.json', "{}")
-> const file3 = gist.createFile('3.json', "{}")
-> 
-> await file1.save();
-> await file2.save();
-> await file3.save();
+
+```ts
+const file1 = gist.createFile('1.json', "{}")
+const file2 = gist.createFile('2.json', "{}")
+const file3 = gist.createFile('3.json', "{}")
+
+await file1.save();
+await file2.save();
+await file3.save();
+```
 > 
 > this will work as the latest commit-id will be fetched when 
 > saving the next file.  
 > 
-> // Or
-> 
-> gist.save();
->
+> Or
+```ts
+gist.save();
+```
 > this will work as well because all the changes will go in a single commit.
-> 
+
 
 ## Installation
 
