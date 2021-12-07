@@ -15,48 +15,6 @@ Use this promise based API to
 store data on your github gists without the 
 need to make those tedious HTTP requests.
 
-> Note: Github Gist's API work on commit-id basis. If you save anything, 
-> it is a new commit and the commit-id changes. So, when you save, 
-> don't do that simultaneously. 
-> 
-> For instance, assume you are using this in your API. 
-> And you have an endpoint `/create-file`.
-> 
-> Think multiple people making request at the same time:
-```
-/create-file?name=1.json
-/create-file?name=2.json
-/create-file?name=3.json
-...
-```
-
-> If this happens at the same time, then we cannot guarantee that the 
-> all the files will be saved. Maybe when creating both 2.json and 3.json,
-> we are making use of the same commit-id. Both will work but 1 will over-write 
-> the other commit.
-> 
-> But if you do:
-
-```ts
-const file1 = gist.createFile('1.json', "{}")
-const file2 = gist.createFile('2.json', "{}")
-const file3 = gist.createFile('3.json', "{}")
-
-await file1.save();
-await file2.save();
-await file3.save();
-```
-> 
-> this will work as the latest commit-id will be fetched when 
-> saving the next file.  
-> 
-> Or
-```ts
-gist.save();
-```
-> this will work as well because all the changes will go in a single commit.
-
-
 ## Installation
 
 ```
@@ -173,6 +131,42 @@ await projectsFile.save();
 await gist.save();
 ```
 > Only files that have un-saved changes will be saved.
+
+### Gotchas
+
+Github Gist's API work on commit-id basis. If you save anything, 
+it is a new commit and the commit-id changes. So, when you save, 
+don't do that simultaneously. 
+
+For instance, assume you have an endpoint `/create-file`. And if multiple people making request at the same time:
+```
+/create-file?name=1.json
+/create-file?name=2.json
+/create-file?name=3.json
+...
+```
+
+then we cannot guarantee that the 
+all the files will be saved. When creating `2.json` and `3.json`, there is a possibility 
+that we make use of the same commit-id at HEAD. Both will work but 1 will over-write 
+the other commit.
+ 
+But if you do the following, it will work as the latest commit-id will be fetched when 
+saving each file.
+```ts
+const file1 = gist.createFile('1.json', "{}")
+const file2 = gist.createFile('2.json', "{}")
+const file3 = gist.createFile('3.json', "{}")
+
+await file1.save();
+await file2.save();
+await file3.save();
+```
+
+Or even this will work as well because all the changes will be pushed in a single commit.
+```ts
+gist.save();
+```
 
 ### Sample
 ```ts
