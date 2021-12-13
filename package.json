@@ -16,7 +16,7 @@
     "test:watch": "jest --watch",
     "prettier:fix": "prettier -w ./src/**/*.ts -w ./src/**/*.tsx --no-error-on-unmatched-pattern true",
     "lint:fix": "eslint --fix ./src/**/*.ts --fix ./src/**/*.tsx --no-error-on-unmatched-pattern true",
-    "git:rebase": "git fetch && git rebase origin/main",
+    "git:rebase": "git fetch && git rebase origin/master",
     "release": "npm run git:rebase && npm run build && standard-version && git push --follow-tags && npm publish --access=public",
     "lint": "eslint src/*"
   },
