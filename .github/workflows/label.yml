@@ -12,6 +12,10 @@ jobs:
   label:
 
     runs-on: ubuntu-latest
+
+    # Because dependabot adds label automatically
+    if: ${{ github.actor != 'dependabot[bot]' }}
+
     permissions:
       contents: read
       pull-requests: write
