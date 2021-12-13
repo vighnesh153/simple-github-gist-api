@@ -1,11 +1,10 @@
 # Simple Github Gist API
 
-<p>
-<img alt="npm" src="https://img.shields.io/npm/dt/simple-github-gist-api">
-<a href="https://www.npmjs.com/package/simple-github-gist-api">
-  <img alt="npm" src="https://img.shields.io/npm/v/simple-github-gist-api">
-</a>
-</p>
+[![npm (scoped)](https://img.shields.io/npm/v/simple-github-gist-api)](https://www.npmjs.com/package/simple-github-gist-api)
+[![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/simple-github-gist-api)](https://img.shields.io/bundlephobia/minzip/simple-github-gist-api)
+[![npm](https://img.shields.io/npm/dt/simple-github-gist-api)](https://img.shields.io/npm/dt/simple-github-gist-api)
+[![GitHub](https://img.shields.io/github/license/vighnesh153/simple-github-gist-api)](https://github.com/vighnesh153/simple-github-gist-api/blob/master/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/vighnesh153/simple-github-gist-api)](https://github.com/vighnesh153/simple-github-gist-api/issues)
 
 Use this promise based API to 
 store data on your github gists without the 
