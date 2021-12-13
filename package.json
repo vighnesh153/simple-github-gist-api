@@ -6,10 +6,19 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest --config jestconfig.json",
-    "build": "echo \"Building the package\" && rimraf dist/ && tsc",
     "prepublish": "npm run build",
     "postpublish": "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag v$PACKAGE_VERSION && git push --tags",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cleanup": "rimraf dist",
+    "build:pre-requisite": "npm run test",
+    "build:declaration": "tsc",
+    "build": "npm run cleanup && npm run build:pre-requisite && npm-run-all build:*",
+    "test:watch": "jest --watch",
+    "prettier:fix": "prettier -w ./src/**/*.ts -w ./src/**/*.tsx --no-error-on-unmatched-pattern true",
+    "lint:fix": "eslint --fix ./src/**/*.ts --fix ./src/**/*.tsx --no-error-on-unmatched-pattern true",
+    "git:rebase": "git fetch && git rebase origin/main",
+    "release": "npm run git:rebase && npm run build && standard-version && git push --follow-tags && npm publish --access=public",
+    "lint": "eslint src/*"
   },
   "files": [
     "dist/**/*"
@@ -33,6 +42,8 @@
   },
   "homepage": "https://github.com/vighnesh153/simple-github-gist-api#readme",
   "devDependencies": {
+    "@commitlint/cli": "^15.0.0",
+    "@commitlint/config-conventional": "^15.0.0",
     "@types/jest": "^27.0.2",
     "eslint": "^8.4.1",
     "eslint-config-airbnb": "^19.0.2",
@@ -47,8 +58,11 @@
     "husky": "^7.0.4",
     "jest": "^27.3.0",
     "lint-staged": "^12.1.2",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.5.1",
     "rimraf": "^3.0.2",
+    "semantic-release": "^18.0.1",
+    "standard-version": "^9.3.2",
     "ts-jest": "^27.0.7",
     "typescript": "^4.4.4"
   },
