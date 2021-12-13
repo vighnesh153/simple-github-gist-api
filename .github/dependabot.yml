@@ -11,4 +11,4 @@ updates:
       interval: "daily"
     reviewers:
       - "vighnesh153"
-    target-branch: "main"
+    target-branch: "master"
