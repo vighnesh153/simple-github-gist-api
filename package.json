@@ -1,6 +1,6 @@
 {
   "name": "simple-github-gist-api",
-  "version": "2.0.43",
+  "version": "2.0.44",
   "description": "A way to store data on Github Gist.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
