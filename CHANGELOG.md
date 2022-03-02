@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.0.48 (2022-03-02)
+
 ### 2.0.47 (2022-02-28)
 
 ### [2.0.46](https://github.com/vighnesh153/simple-github-gist-api/compare/v2.0.45...v2.0.46) (2022-02-25)
