@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from 'axios';
 
-import getAuthConfig from "../util/auth-config";
+import getAuthConfig from '../util/auth-config';
 
-import constants from "../constants";
+import constants from '../constants';
 
 interface GistFileOptions {
   personalAccessToken: string;
@@ -17,7 +17,7 @@ interface GistFileOptions {
   cors?: {
     addPrefix?: boolean;
     customPrefix?: (url: string) => string;
-  }
+  };
 }
 
 class GistFile {
@@ -34,14 +34,23 @@ class GistFile {
   private readonly addCorsPrefix: boolean;
   private readonly customCorsPrefix?: (url: string) => string;
 
-
   // Getters
-  get hasUpdates(): boolean { return this.fileHasUpdates; }
-  get name(): string { return this.fileName; }
-  get content(): string { return this.fileContent; }
+  get hasUpdates(): boolean {
+    return this.fileHasUpdates;
+  }
+
+  get name(): string {
+    return this.fileName;
+  }
+
+  get content(): string {
+    return this.fileContent;
+  }
 
   // Setters
-  set hasUpdates(value: boolean) { this.fileHasUpdates = value; };
+  set hasUpdates(value: boolean) {
+    this.fileHasUpdates = value;
+  }
 
   constructor(options: GistFileOptions) {
     this.personalAccessToken = options.personalAccessToken;
@@ -66,27 +75,31 @@ class GistFile {
   overwrite = (newContent: string): void => {
     this.fileContent = newContent;
     this.fileHasUpdates = true;
-  }
+  };
 
   /**
    * Save the gist-file
    */
   save = async (): Promise<void> => {
-    if (this.hasUpdates === false) return;
+    if (!this.hasUpdates) return;
 
     const url = `${constants.githubGists}/${this.gistId}`;
     const body = {
       public: this.isPublic,
       files: {
         [this.fileName]: {
-          content: this.fileContent
-        }
-      }
+          content: this.fileContent,
+        },
+      },
     };
 
-    await axios.post(url, body, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
+    await axios.post(
+      url,
+      body,
+      getAuthConfig({ personalAccessToken: this.personalAccessToken })
+    );
     this.fileHasUpdates = false;
-  }
+  };
 
   /**
    * Fetch the latest version of the file
@@ -94,41 +107,49 @@ class GistFile {
   fetchLatest = async (): Promise<void> => {
     const latestCommit = await this.getLatestGistCommit();
     const url = this.getLatestGistFileFetchUrl(latestCommit);
-    this.fileContent = await axios.get(url, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
+    const response = await axios.get<string>(
+      url,
+      getAuthConfig({ personalAccessToken: this.personalAccessToken })
+    );
+    this.fileContent = response.data;
     this.fileHasUpdates = false;
-  }
+  };
 
   /**
    * [Private Member] Returns the latest fetch url for the file. It gets updated on commit changes.
    *
    * @param commitId
    */
-  private getLatestGistFileFetchUrl = (commitId: string): string => {
-    const {addCorsPrefix, customCorsPrefix, gistOwner, gistId,} = this;
+  private readonly getLatestGistFileFetchUrl = (commitId: string): string => {
+    const { addCorsPrefix, customCorsPrefix, gistOwner, gistId } = this;
 
-    const url = `https://gist.githubusercontent.com/${gistOwner}` +
+    const url =
+      `https://gist.githubusercontent.com/${gistOwner}` +
       `/${gistId}/raw/${commitId}/${this.fileName}`;
 
-    if (addCorsPrefix === false) return url;
-    if (customCorsPrefix) return customCorsPrefix(url);
+    if (!addCorsPrefix) return url;
+    if (customCorsPrefix != null) return customCorsPrefix(url);
     return constants.corsAnywhere + url;
-  }
+  };
 
   /**
    * Returns the latest commit of the gist
    */
-  private getLatestGistCommit = async (): Promise<string> => {
-    const dummyParam = `dummyParam=${ Math.random() }`; // So that we are not a victim of caching
+  private readonly getLatestGistCommit = async (): Promise<string> => {
+    const dummyParam = `dummyParam=${Math.random()}`; // So that we are not a victim of caching
     const url = `${constants.githubGists}/${this.gistId}?${dummyParam}`;
     try {
-      const result = await axios.get<{ history: { version: string }[] }>(url, getAuthConfig({ personalAccessToken: this.personalAccessToken }));
-      const response: { history: { version: string }[] } = result.data;
+      const result = await axios.get<{ history: Array<{ version: string }> }>(
+        url,
+        getAuthConfig({ personalAccessToken: this.personalAccessToken })
+      );
+      const response: { history: Array<{ version: string }> } = result.data;
       const latestCommit = response.history[0];
       return latestCommit.version;
     } catch (e) {
-      throw new Error('Error while fetching the latest commit.')
+      throw new Error('Error while fetching the latest commit.');
     }
-  }
+  };
 }
 
 export default GistFile;
