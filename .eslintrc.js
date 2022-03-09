@@ -1,7 +1,17 @@
 module.exports = {
-  extends: ['airbnb', 'prettier', 'plugin:node/recommended'],
-  plugins: ['prettier'],
+  extends: [
+    'standard-with-typescript',
+    'prettier',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:import/typescript',
+  ],
+  plugins: ['prettier', 'import', '@typescript-eslint'],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    project: "./tsconfig.json"
+  },
   rules: {
+    '@typescript-eslint/adjacent-overload-signatures': 'warn',
     'prettier/prettier': 'error',
     'no-unused-vars': 'warn',
     'no-console': 'off',
