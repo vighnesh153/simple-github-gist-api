@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.0.79 (2022-05-13)
+
 ### [2.0.78](https://github.com/vighnesh153/simple-github-gist-api/compare/v2.0.77...v2.0.78) (2022-05-11)
 
 ### [2.0.77](https://github.com/vighnesh153/simple-github-gist-api/compare/v2.0.76...v2.0.77) (2022-05-09)
