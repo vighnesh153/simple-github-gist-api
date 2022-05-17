@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/vighnesh153/simple-github-gist-api#readme",
   "devDependencies": {
-    "@commitlint/cli": "^16.0.0",
+    "@commitlint/cli": "^17.0.0",
     "@commitlint/config-conventional": "^17.0.0",
     "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
