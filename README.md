@@ -8,7 +8,7 @@
 
 Use this promise based API to 
 store data on your github gists without the 
-need to make those tedious HTTP requests.
+need to manually make those tedious HTTP requests.
 
 > Note: This documentation is for v2 of the lib. v2 has a few breaking changes. You can find the v1 documentation in the `docs` directory (On Github).
 
