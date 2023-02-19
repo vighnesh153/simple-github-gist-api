@@ -1,5 +1,10 @@
 # Simple Github Gist API
 
+DEPRECATED 
+
+THIS PACKAGE HAS BEEN DEPRECATED IN FAVOUR OF [@vighnesh153/github-gist](https://www.npmjs.com/package/@vighnesh153/github-gist). IT WAS NOT FUN TO MAINTAIN MULTIPLE REPOSITORIES AND I HAVE NOW MOVED ALL MY PACKAGES TO A SINGLE MONOREPO. APOLOGIES FOR THE INCONVINIENCE. [NEW REPOSITORY](https://github.com/vighnesh153/vighnesh153-turbo)
+
+
 [![npm (scoped)](https://img.shields.io/npm/v/simple-github-gist-api)](https://www.npmjs.com/package/simple-github-gist-api)
 [![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/simple-github-gist-api)](https://img.shields.io/bundlephobia/minzip/simple-github-gist-api)
 [![npm](https://img.shields.io/npm/dt/simple-github-gist-api)](https://img.shields.io/npm/dt/simple-github-gist-api)
